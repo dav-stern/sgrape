@@ -1,4 +1,4 @@
-# Sgrape
+# Sgrape 🍇
 
 Build and maintain simple webscrapers easily.
 
