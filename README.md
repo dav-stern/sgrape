@@ -27,7 +27,7 @@ const scraperSchema = {
 
 // per field helpers (optional)
 const scraperHelpers = {
-  title: city => title.replace('/', ' '),
+  title: title => title.replace('/', ' '),
   desc : desc => desc.substr(0,30) + '...'
 };
 

@@ -5,5 +5,28 @@
     "cheerio": "^1.0.0-rc.3",
     "list-it": "^1.0.5",
     "puppeteer": "^2.0.0"
-  }
+  },
+  "description": "Build and maintain simple webscrapers easily.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dav-stern/sgrape.git"
+  },
+  "keywords": [
+    "scraper",
+    "scrape",
+    "scraping",
+    "schema",
+    "webscraper"
+  ],
+  "author": "David Stern",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dav-stern/sgrape/issues"
+  },
+  "homepage": "https://github.com/dav-stern/sgrape#readme"
 }
