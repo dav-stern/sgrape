@@ -168,7 +168,3 @@ class Sgrape {
 }
 
 module.exports = Sgrape;
-
-const scraperOptions = require('./examples/landing.jobs');
-
-const scraper = new Sgrape(scraperOptions);
