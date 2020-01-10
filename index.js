@@ -4,10 +4,16 @@ const ListIt = require('list-it');
 
 class Sgrape {
   constructor(config) {
-    config.schema.mandatory = true;
+    if (!config) return this.kill('Missing a config');
+
     this.schema = config.schema || this.kill('Missing a schema');
+    config.schema.mandatory = true;
     this.startPage =
-      config.schema.startPage || this.kill('Missing a schema.startPage');
+      config.schema.startPage ||
+      this.kill(
+        'Missing a schema.startPage in :' + JSON.stringify(config.schema)
+      );
+    if (this.killed) return;
     this.nextPageSelector = this.schema.nextPageSelector;
     this.helpers = config.helpers;
     this.html = config.html;
@@ -28,7 +34,7 @@ class Sgrape {
           try {
             await page.goto(this.startPage);
           } catch (e) {
-            this.kill(e);
+            return this.kill(e);
           }
           let nextPage = true;
           while (nextPage === true) {
@@ -38,6 +44,7 @@ class Sgrape {
 
             console.log(`Scrapping page ${++this.currentPage}`);
             this.parse();
+            if (this.killed) return;
             if (this.nextPageSelector) {
               await page
                 .click(this.nextPageSelector)
@@ -48,14 +55,16 @@ class Sgrape {
               nextPage = false;
             }
           }
-          this.log();
+
           if (this.done) {
             this.done(this.res);
+          } else {
+            this.log();
           }
           console.log("~~~~~~~ That's all folks ! ~~~~~~~");
         });
     } catch (e) {
-      this.kill(e);
+      return this.kill(e);
     }
   }
 
@@ -65,22 +74,30 @@ class Sgrape {
     const keys = Object.keys(schema);
 
     if (!selector)
-      this.kill('Missing selector for schema : ' + JSON.stringify(schema));
+      return this.kill(
+        'Missing selector for schema : ' + JSON.stringify(schema)
+      );
 
-    if (!html) this.kill('Missing html in schema : ' + JSON.stringify(schema));
+    if (!html)
+      return this.kill('Missing html in schema : ' + JSON.stringify(schema));
 
     const $ = cheerio.load(html);
 
     const els = this.selectElements($, selector, func);
+    if (this.killed) return;
 
     if (!els.length && schema.mandatory)
-      this.kill(`No elements founds for mandatory selector '${selector}'`);
+      return this.kill(
+        `No elements founds for mandatory selector '${selector}'`
+      );
 
     if (attr) {
       let val = this.selectAttr($, els, attr);
 
+      if (this.killed) return;
+
       if (!val && mandatory) {
-        this.kill(
+        return this.kill(
           `No value found for found for mandatory selector '${selector}'`
         );
       }
@@ -102,6 +119,7 @@ class Sgrape {
           retEl[key] = this.applyHelper(this.parse(schema[key], el), key);
         }
       });
+      if (this.killed) return;
       res.push(retEl);
     });
 
@@ -163,7 +181,7 @@ class Sgrape {
 
   kill(message) {
     console.log('Scrapper stopped : ' + message);
-    process.exit();
+    // process.exit(1);
   }
 }
 

@@ -16,7 +16,7 @@ $ npm i sgrape
 
 const Sgrape = require('sgrape');
 
-const scraperSchema = {
+const schema = {
   startPage: 'https://www.website.com/page',
   selector: '.element-selector',
   nextPageSelector: '.page-link[rel=next]', // optional
@@ -26,12 +26,12 @@ const scraperSchema = {
 };
 
 // per field helpers (optional)
-const scraperHelpers = {
+const helpers = {
   title: title => title.replace('/', ' '),
   desc : desc => desc.substr(0,30) + '...'
 };
 
-const scraperConfig = { scraperSchema, scraperHelpers };
+const scraperConfig = { schema, helpers };
 
 // executes once job finished.
 scraperConfig.done = res => {
@@ -39,7 +39,7 @@ scraperConfig.done = res => {
   console.log(res);
 };
 
-const scraper = new Sgrape(scraperOptions);
+const scraper = new Sgrape(scraperConfig);
 
 ```
 
